@@ -44,3 +44,6 @@ config :lean_coffee, LeanCoffee.Repo,
   database: "lean_coffee_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :lean_coffee, Guardian,
+  secret_key: "WazTWLPr8NLymPwRfPGjqFVeKr5HiVvySkltNNiVUnTciKX8/XB2QVtFUc1o1xaD"

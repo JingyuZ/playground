@@ -22,6 +22,12 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Configures Guardian
+config :lean_coffee, LeanCoffee.Guardian,
+  issuer: "LeanCoffeeApp",
+  ttl: {30, :days},
+  secret_key: Application.get_env(:lean_coffee, Guardian)[:secret_key]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
