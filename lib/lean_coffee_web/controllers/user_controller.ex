@@ -13,10 +13,18 @@ defmodule LeanCoffeeWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
-      conn
+      new_conn = Guardian.Plug.api_sign_in(conn, user, :access)
+      jwt = Guardian.Plug.current_token(new_conn)
+
+      new_conn
       |> put_status(:created)
       |> put_resp_header("location", user_path(conn, :show, user))
-      |> render("show.json", user: user)
+      |> render(SessionView, "show.json", user: user, jwt: jwt)
+    end
+
+    with {:error, _} <- Accounts.create_user(user_params) do
+      conn
+      |> put_status(:unprocessable_entity)
     end
   end
 

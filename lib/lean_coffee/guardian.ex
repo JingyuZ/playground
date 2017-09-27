@@ -1,19 +1,19 @@
 defmodule LeanCoffee.Guardian do
   use Guardian, otp_app: :lean_coffee
 
-  def subject_for_token(resource, _claims) do
-    {:ok, to_string(resource.id)}
+  def subject_for_token(user = %LeanCoffee.Accounts.User{}) do
+    {:ok, to_string(user.id)}
   end
 
-  def subject_for_token(_, _) do
-    {:error, :reason_for_error}
+  def subject_for_token(_) do
+    {:error, "Unknow resource type"}
   end
 
   def resource_from_claims(claims) do
-    {:ok, find_me_a_resource(claims["sub"])}
+    {:ok, LeanCoffee.Accounts.get_user!(claims["id"])}
   end
-  
+
   def resource_from_claims(_claims) do
-    {:error, :reason_for_error}
+    {:error, "Unknow resource type"}
   end
 end
